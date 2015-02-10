@@ -6,6 +6,9 @@ import sys
 __author__ = 'Anton M Alexeyev'
 
 class HashedWordMatrix:
+    """
+    I should've used some cool matrices
+    """
 
     def __init__(self):
         self.dict = {}
@@ -18,17 +21,17 @@ class HashedWordMatrix:
             if self.dict[first][1].has_key(second):
                 self.dict[first][1][second] += value
             else:
-                self.dict[first][1][second]  = value
+                self.dict[first][1][second] = value
         else:
-            self.dict[first] = [{}, {second : value}]
+            self.dict[first] = [{}, {second: value}]
 
         if self.dict.has_key(second):
             if self.dict[second][0].has_key(first):
                 self.dict[second][0][first] += value
             else:
-                self.dict[second][0][first]  = value
+                self.dict[second][0][first] = value
         else:
-            self.dict[second] = [{first : value}, {}]
+            self.dict[second] = [{first: value}, {}]
 
     def get(self, target, first, second):
         """Getting the value of the cell in the matrix; target -- row"""
@@ -89,11 +92,11 @@ class HashedWordMatrix:
             kk1 = self.get(col1, key, col1)
             collector += k0 * k1
             collector += kk0 * kk1
-            #length0 += k0 ** 2 + kk0 ** 2
+            # length0 += k0 ** 2 + kk0 ** 2
             #length1 += k1 ** 2 + kk1 ** 2
-        #length0 **= 0.5
-        #length1 **= 0.5
-#        return length0 * length1 / collector  #if collector > 0 else 0.000000000001
+            #length0 **= 0.5
+            #length1 **= 0.5
+        # return length0 * length1 / collector  #if collector > 0 else 0.000000000001
         if collector > 0:
             return 1 / collector
         else:
@@ -106,7 +109,7 @@ class HashedWordMatrix:
         for word in self.get_tokens():
             if not word.startswith("*"):
                 coolset.add((dist_func(target_column, word), word))
-        array = list(coolset[1 : k + 1])
+        array = list(coolset[1: k + 1])
         return array
 
     def kn_cooccurences(self, target_column, k):
@@ -115,6 +118,6 @@ class HashedWordMatrix:
         for word in self.get_tokens():
             if not word.startswith("*"):
                 coolset.add((self.get(target_column, target_column, word), word))
-        array = list(coolset[len(coolset) - k : len(coolset)])
+        array = list(coolset[len(coolset) - k: len(coolset)])
         array.reverse()
         return array

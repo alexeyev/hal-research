@@ -1,14 +1,13 @@
 #!/usr/bin/python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
 __author__ = 'Anton M Alexeyev'
-# I decided to implement HAL -- a method for cognitive studies and recommender systems
 
 from nltk.stem import PorterStemmer
 from hashed_matrix_management import HashedWordMatrix
 from nltk.corpus import stopwords
 from nltk import pos_tag
 import re
-from data_printer import graph_to_file
 
 
 window_size = 11
@@ -17,6 +16,7 @@ matrix = HashedWordMatrix()
 
 # i chose the one everybody knows
 stemmer = PorterStemmer()
+
 
 def train_model(file):
     global matrix
@@ -56,7 +56,7 @@ def train_model(file):
         if pair[0] in stopwords.words('english'):
             tokens_filtered += [("*", pair[1])]
         else:
-            tokens_filtered += [ pair ]
+            tokens_filtered += [pair]
 
     tokens_filtered = [('*', "-NONE-")] * (window_size - 1) + tokens_filtered + [('*', "-NONE-")] * (window_size - 1)
 
@@ -90,8 +90,8 @@ def train_model(file):
         while first < len(window):
             second = first + 1
             while second < len(window):
-               matrix.add(window[first], window[second], 1)
-               second += 1
+                matrix.add(window[first], window[second], 1)
+                second += 1
             first += 1
         win_start += 1
 
@@ -101,16 +101,14 @@ def train_model(file):
 
     print "Number of terms:", str(len(matrix.get_tokens())) + "."
 
-    print "Writing graph to file"
-
-    graph_to_file(matrix, charlist, 'graph.nwb')
-
     print "Done."
+
 
 def get_token_by_word(word):
     global stemmer
     word = re.findall(r"[A-Za-z]+", word)[0]
     return stemmer.stem(word.lower())
+
 
 def get_euclidean_vector_by_token(n, token):
     global matrix
@@ -119,12 +117,14 @@ def get_euclidean_vector_by_token(n, token):
         return matrix.kn_columns(token, n, matrix.dist_cols_euclidean)
     raise KeyError
 
-def get_cosine_vector_by_token( n, token):
+
+def get_cosine_vector_by_token(n, token):
     global matrix
     print "New token:", token
     if token in matrix.get_tokens():
         return matrix.kn_columns(token, n, matrix.dist_cols_inverted_cosine)
     raise KeyError
+
 
 def get_frequential_vector_by_token(n, token):
     global matrix
@@ -133,12 +133,14 @@ def get_frequential_vector_by_token(n, token):
         return matrix.kn_cooccurences(token, n)
     raise KeyError
 
+
 def get_manhattan_vector_by_token(n, token):
     global matrix
     print "New token:", token
     if token in matrix.get_tokens():
         return matrix.kn_columns(token, n, matrix.dist_cols_manhattan)
     raise KeyError
+
 
 def test_print():
     global matrix
